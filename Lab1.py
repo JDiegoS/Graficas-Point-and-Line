@@ -31,18 +31,21 @@ class Render(object):
     def glInit(self, width, height):
         return
     
+    #Area para pintar
     def glViewPort(self, x, y, width, height):
         self.xw = x
         self.yw = y
         self.widthw = width
         self.heightw = height
-        
+
+    #Pintar imagen   
     def glClear(self):
         self.framebuffer = [
             [self.clearC for x in range(self.width)]
             for y in range(self.height)
         ]
 
+    #Color para pintar imagen
     def glClearColor(self, r, g, b):
         r = int(r * 255)
         g = int(g * 255)
@@ -50,6 +53,7 @@ class Render(object):
         self.clearC = bytes([b, g, r])
         self.glClear()
 
+    #Crear archivo de la imagen
     def glFinish(self, filename):
         f = open(filename, 'bw')
 
@@ -80,6 +84,7 @@ class Render(object):
 
         f.close()
 
+    #Pintar punto
     def glVertex(self, x, y):
         xn = (x + 1)*(self.widthw/2) + self.xw
         yn = (y + 1)*(self.heightw/2) + self.yw
@@ -87,15 +92,47 @@ class Render(object):
         yn = int(yn)
         self.framebuffer[yn][xn] = self.color
 
+    #Color del punto
     def glColor(self, r, g, b):
         r = int(r * 255)
         g = int(g * 255)
         b = int(b * 255)
         self.color = bytes([b, g, r])
 
-bitmap = glCreateWindow(500, 500)
-bitmap.glColor(0, 0, 1)
-bitmap.glClearColor(0.5, 0.5, 0.5)
-bitmap.glViewPort(250, 250, 250, 250)
-bitmap.glVertex(-1, -1)
-bitmap.glFinish('resultado.bmp')
+print("SR1: Point")
+i = False
+while i == False:
+    
+    print("Ingrese el tamanio del framebuffer")
+    wid = int(input("width: "))
+    hei = int(input("height: "))
+    bitmap = glCreateWindow(wid, hei)
+
+    print("Ingrese los valores r g b para el color de la imagen (valores de 0 a 1)")
+    r = float(input("r: "))
+    g = float(input("g: "))
+    b = float(input("b: "))
+    bitmap.glClearColor(r, g, b)
+
+    print("Ingrese los valores r g b para el color del punto (valores de 0 a 1)")
+    rp = float(input("r: "))
+    gp = float(input("g: "))
+    bp = float(input("b: "))
+    bitmap.glColor(rp, gp, bp)
+
+    print("Ingrese los valores del view port")
+    x = int(input("x: "))
+    y = int(input("y: "))
+    width = int(input("width: "))
+    height = int(input("height: "))
+    bitmap.glViewPort(x, y, width, height)
+
+    print("Ingrese las coordenadas donde se dibujara el punto (valores de -1 a 1)")
+    xp = float(input("x: "))
+    yp = float(input("y: "))
+    bitmap.glVertex(xp, yp)
+    bitmap.glFinish('resultado.bmp')
+    print("Archivo creado")
+    op = input("Desea crear otra imagen? (y/n)\n")
+    if op == 'n':
+        i = True
